@@ -1,0 +1,73 @@
+import pandas as pd
+import psycopg2
+data=pd.read_csv(r'C:\Users\tiwar\Desktop\STUDY\videos-stats.csv')
+try:
+    conn = psycopg2.connect(
+        host="localhost",
+        database="postgres",
+        user="postgres",
+        password="vaibhav"
+    )
+except psycopg2.Error as e:
+    print(e)
+try:
+    cur=conn.cursor()
+except psycopg2.Error as e:
+    print(e)
+conn.set_session(autocommit=True)
+#Creating a database
+try:
+    cur.execute('create database youtube_and_spotify ')
+except psycopg2.Error as e:
+    print(e)
+#Closing old database connection and will setup new connection database
+try:
+    conn.close()
+except psycopg2.Error as e:
+    print(e)
+try:
+    conn = psycopg2.connect(
+        host="localhost",
+        database="youtube_and_spotify",
+        user="postgres",
+        password="vaibhav@16"
+    )
+except psycopg2.Error as e:
+    print(e)
+
+try:
+    cur=conn.cursor()
+except psycopg2.Error as e:
+    print(e)
+conn.set_session(autocommit=True)
+
+cur.execute('''
+        CREATE TABLE IF NOT EXISTS STATS (
+            SR_NO NUMERIC,
+            Title VARCHAR(255),
+            Video_Id VARCHAR(100),
+            Published_Date DATE,
+            Keyword VARCHAR(100),
+            Likes NUMERIC,
+            Comments NUMERIC,
+            Views NUMERIC
+        );
+    ''')
+
+stats=('''INSERT INTO STATS(
+SR_NO,
+Title,
+Video_Id,
+Published_Date,
+Keyword,
+Likes,
+Comments,
+Views)
+values(%s,%s,%s,%s,%s,%s,%s,%s)
+
+
+''')
+
+for i,rows in data.iterrows():
+    cur.execute(stats,list(rows))
+
