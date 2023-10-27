@@ -1,0 +1,56 @@
+import string as s
+AtoZ=list(s.ascii_lowercase)+list(s.ascii_lowercase)
+print(AtoZ)
+
+print( '''                                          
+ ,adPPYba, ,adPPYYba,  ,adPPYba, ,adPPYba, ,adPPYYba, 8b,dPPYba,  
+a8"     "" ""     `Y8 a8P_____88 I8[    "" ""     `Y8 88P'   "Y8  
+8b         ,adPPPPP88 8PP"""""""  `"Y8ba,  ,adPPPPP88 88          
+"8a,   ,aa 88,    ,88 "8b,   ,aa aa    ]8I 88,    ,88 88          
+ `"Ybbd8"' `"8bbdP"Y8  `"Ybbd8"' `"YbbdP"' `"8bbdP"Y8 88          
+                                                                ''')
+
+Q1=input('Please type encode to encrypt and decode to decrypt')
+Q2=input("please enter you messsage")
+Q3=int(input("please enter the shift number"))
+
+Q2=Q2.replace(" ",',')
+Q2=list(Q2)
+
+
+while Q3 >= 10:
+    Q3 = sum(int(digit) for digit in str(Q3))
+
+game_is_on=True
+while game_is_on:
+  if Q1=='encode':
+    string=''
+    for i in Q2:
+      if i in AtoZ:
+        s=AtoZ.index(i)
+        s+=Q3
+        string+=AtoZ[s]
+      else:
+        i=i.replace(','," ")
+        string+=i
+    game_is_on=False
+  
+  elif Q1=='decode':
+    string=''
+    for i in Q2:
+      if i in AtoZ:
+        s=AtoZ.index(i)
+        s-=Q3
+        string+=AtoZ[s]
+      else:
+        i=i.replace(','," ")
+        string+=i
+    game_is_on=False
+  
+  else:
+    print('please choose the correct option')
+
+
+
+
+print(string)
