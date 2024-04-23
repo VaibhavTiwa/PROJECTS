@@ -98,10 +98,6 @@ project_id = 'vaibhavtiwari-420903'
 bucket = 'gs://vaibhtiwari'
 input_file = 'gs://vaibhtiwari/user.csv'
 
-# Grant write access to the bucket for Dataflow service account (recommended)
-# Follow instructions in previous response to achieve this.
-
-# Define PipelineOptions with your desired cache location
 options = PipelineOptions(
     runner='DataflowRunner',
     cache_location='gs://vaibhtiwari/tmp/'  # Change this only if you cannot grant write access
@@ -110,7 +106,7 @@ google_cloud_options = options.view_as(GoogleCloudOptions)
 google_cloud_options.project = project_id
 google_cloud_options.region = 'us-central1'
 
-# Define the BigQuery schema with "fields" key
+
 schema = {
     "fields": [
         {"name": "id", "type": "STRING"},
@@ -121,15 +117,15 @@ schema = {
     ]
 }
 
-# Define the Apache Beam pipeline
+
 with beam.Pipeline(options=options) as pipeline:
     # Read the CSV file from GCS
     lines = pipeline | 'ReadFromGCS' >> beam.io.ReadFromText(input_file)
 
-    # Transform the CSV data into a dictionary
+    
     data = lines | 'ParseCSV' >> beam.Map(lambda line: dict(zip(('ID', 'Name', 'Email', 'Age', 'City'), line.split(','))))
 
-    # Write the data to BigQuery
+   
     data | 'WriteToBigQuery' >> WriteToBigQuery(
         table='vaibhavtiwari-420903.test1.tst-table',  # Change to your dataset and table name
         schema=schema,
